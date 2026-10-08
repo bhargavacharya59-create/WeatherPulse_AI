@@ -1,7 +1,5 @@
 # WeatherPulse AI — Detect. Track. Alert. Protect.
 
-**Smart India Hackathon 2026 · Problem statement SIH26078** — *AI-driven spatio-temporal tracking of extreme weather anomalies in medium-range forecasts* · Team **404 THINKER'S**
-
 WeatherPulse AI turns 3–10 day ensemble weather forecasts into local, actionable impact intelligence:
 
 1. **Detect** unusual forecast patterns against the historical baseline (ML classifier + anomaly score).
