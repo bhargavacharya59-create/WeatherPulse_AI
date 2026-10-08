@@ -26,9 +26,21 @@ def _env_bool(name: str, default: bool) -> bool:
 
 @dataclass
 class Settings:
-    data_dir: Path = field(default_factory=lambda: Path(os.getenv("WP_DATA_DIR", REPO_DIR / "data")))
-    db_path: Path = field(default_factory=lambda: Path(os.getenv("WP_DB_PATH", REPO_DIR / "data" / "weatherpulse.db")))
-    model_dir: Path = field(default_factory=lambda: Path(os.getenv("WP_MODEL_DIR", REPO_DIR / "data" / "models")))
+    data_dir: Path = field(
+        default_factory=lambda: Path(
+            os.getenv("WP_DATA_DIR", REPO_DIR / "data")
+        )
+    )
+    db_path: Path = field(
+        default_factory=lambda: Path(
+            os.getenv("WP_DB_PATH", REPO_DIR / "data" / "weatherpulse.db")
+        )
+    )
+    model_dir: Path = field(
+        default_factory=lambda: Path(
+            os.getenv("WP_MODEL_DIR", REPO_DIR / "data" / "models")
+        )
+    )
 
     # Forecast grid (India domain). 0.25 deg ~ 27 km, same as ERA5.
     lat_min: float = float(os.getenv("WP_LAT_MIN", 6.0))
@@ -37,42 +49,80 @@ class Settings:
     lon_max: float = float(os.getenv("WP_LON_MAX", 98.0))
     grid_res: float = float(os.getenv("WP_GRID_RES", 0.25))
     step_hours: int = int(os.getenv("WP_STEP_HOURS", 6))
-    max_lead_hours: int = int(os.getenv("WP_MAX_LEAD_HOURS", 240))  # 10 days
+    max_lead_hours: int = int(os.getenv("WP_MAX_LEAD_HOURS", 240))
     ensemble_members: int = int(os.getenv("WP_ENSEMBLE_MEMBERS", 6))
 
     # Detection thresholds (standardised anomaly, sigma units)
     z_threshold: float = float(os.getenv("WP_Z_THRESHOLD", 2.5))
     min_object_cells: int = int(os.getenv("WP_MIN_OBJECT_CELLS", 3))
 
-    # Impact-zone base radii in km (high / moderate / low) - adapted per event
+    # Impact-zone base radii in km (high / moderate / low)
     ring_radii_km: tuple = (3.0, 5.0, 8.0)
 
-    # Gemini (optional). Without a key, template messages are used.
-    # Two keys supported for failover: if key 1 is rate-limited, key 2 is tried instantly.
-    gemini_api_key: str | None = field(default_factory=lambda: os.getenv("GEMINI_API_KEY") or None)
-    gemini_api_key_2: str | None = field(default_factory=lambda: os.getenv("GEMINI_API_KEY_2") or None)
-    gemini_model: str = field(default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-2.5-flash"))
-    use_gemini: bool = field(default_factory=lambda: _env_bool("WP_USE_GEMINI", True))
-    # Also use Gemini for the drafts/summaries the pipeline writes automatically on every run
-    # (~50 calls). Off by default so the free tier is kept for the Copilot and manual drafts.
-    gemini_in_pipeline: bool = field(default_factory=lambda: _env_bool("WP_GEMINI_IN_PIPELINE", False))
-
-    # Alert channels. "log" writes to the outbox table; twilio/smtp need credentials.
-    sms_provider: str = field(default_factory=lambda: os.getenv("WP_SMS_PROVIDER", "log"))
-    email_provider: str = field(default_factory=lambda: os.getenv("WP_EMAIL_PROVIDER", "log"))
-    twilio_sid: str | None = field(default_factory=lambda: os.getenv("TWILIO_ACCOUNT_SID"))
-    twilio_token: str | None = field(default_factory=lambda: os.getenv("TWILIO_AUTH_TOKEN"))
-    twilio_from: str | None = field(default_factory=lambda: os.getenv("TWILIO_FROM_NUMBER"))
-    smtp_host: str | None = field(default_factory=lambda: os.getenv("SMTP_HOST"))
-    smtp_port: int = field(default_factory=lambda: int(os.getenv("SMTP_PORT", 587)))
-    smtp_user: str | None = field(default_factory=lambda: os.getenv("SMTP_USER"))
-    smtp_password: str | None = field(default_factory=lambda: os.getenv("SMTP_PASSWORD"))
-    smtp_from: str | None = field(default_factory=lambda: os.getenv("SMTP_FROM"))
-
-    cors_origins: list = field(
-        default_factory=lambda: [o.strip() for o in os.getenv("WP_CORS_ORIGINS", "http://localhost:3000").split(",") if o.strip()]
+    # Gemini (optional)
+    gemini_api_key: str | None = field(
+        default_factory=lambda: os.getenv("GEMINI_API_KEY") or None
     )
-    run_on_startup: bool = field(default_factory=lambda: _env_bool("WP_RUN_ON_STARTUP", True))
+    gemini_api_key_2: str | None = field(
+        default_factory=lambda: os.getenv("GEMINI_API_KEY_2") or None
+    )
+    gemini_model: str = field(
+        default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    )
+    use_gemini: bool = field(
+        default_factory=lambda: _env_bool("WP_USE_GEMINI", True)
+    )
+    gemini_in_pipeline: bool = field(
+        default_factory=lambda: _env_bool("WP_GEMINI_IN_PIPELINE", False)
+    )
+
+    # Alert channels
+    sms_provider: str = field(
+        default_factory=lambda: os.getenv("WP_SMS_PROVIDER", "log")
+    )
+    email_provider: str = field(
+        default_factory=lambda: os.getenv("WP_EMAIL_PROVIDER", "log")
+    )
+    twilio_sid: str | None = field(
+        default_factory=lambda: os.getenv("TWILIO_ACCOUNT_SID")
+    )
+    twilio_token: str | None = field(
+        default_factory=lambda: os.getenv("TWILIO_AUTH_TOKEN")
+    )
+    twilio_from: str | None = field(
+        default_factory=lambda: os.getenv("TWILIO_FROM_NUMBER")
+    )
+    smtp_host: str | None = field(
+        default_factory=lambda: os.getenv("SMTP_HOST")
+    )
+    smtp_port: int = field(
+        default_factory=lambda: int(os.getenv("SMTP_PORT", 587))
+    )
+    smtp_user: str | None = field(
+        default_factory=lambda: os.getenv("SMTP_USER")
+    )
+    smtp_password: str | None = field(
+        default_factory=lambda: os.getenv("SMTP_PASSWORD")
+    )
+    smtp_from: str | None = field(
+        default_factory=lambda: os.getenv("SMTP_FROM")
+    )
+
+    # CORS
+    cors_origins: list = field(
+        default_factory=lambda: [
+            o.strip()
+            for o in os.getenv(
+                "WP_CORS_ORIGINS",
+                "http://localhost:3000,https://weather-pulse-ai-phi.vercel.app"
+            ).split(",")
+            if o.strip()
+        ]
+    )
+
+    run_on_startup: bool = field(
+        default_factory=lambda: _env_bool("WP_RUN_ON_STARTUP", True)
+    )
     default_seed: int = int(os.getenv("WP_SEED", 42))
 
     def ensure_dirs(self) -> None:
