@@ -48,7 +48,9 @@ class Settings:
     ring_radii_km: tuple = (3.0, 5.0, 8.0)
 
     # Gemini (optional). Without a key, template messages are used.
+    # Two keys supported for failover: if key 1 is rate-limited, key 2 is tried instantly.
     gemini_api_key: str | None = field(default_factory=lambda: os.getenv("GEMINI_API_KEY") or None)
+    gemini_api_key_2: str | None = field(default_factory=lambda: os.getenv("GEMINI_API_KEY_2") or None)
     gemini_model: str = field(default_factory=lambda: os.getenv("GEMINI_MODEL", "gemini-2.5-flash"))
     use_gemini: bool = field(default_factory=lambda: _env_bool("WP_USE_GEMINI", True))
     # Also use Gemini for the drafts/summaries the pipeline writes automatically on every run

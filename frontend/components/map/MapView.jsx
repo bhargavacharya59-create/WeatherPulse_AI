@@ -107,7 +107,7 @@ function addLayers(map) {
   const src = (id) => { if (!map.getSource(id)) map.addSource(id, { type: 'geojson', data: EMPTY }); };
   ['wp-wards', 'wp-grid', 'wp-zones', 'wp-tracks', 'wp-routes', 'wp-assets', 'wp-vehicles'].forEach(src);
   const add = (spec) => { if (!map.getLayer(spec.id)) map.addLayer(spec); };
-  const isRing = ['in', ['get', 'ring'], ['literal', ['high', 'moderate', 'low']]];
+  const isRing = ['any', ['==', ['get', 'ring'], 'high'], ['==', ['get', 'ring'], 'moderate'], ['==', ['get', 'ring'], 'low']];
 
   add({ id: 'wards-fill', type: 'fill', source: 'wp-wards', paint: {
     'fill-color': ['interpolate', ['linear'], ['get', 'density_2011'], 0, '#eef3fa', 10000, '#9ec5f4', 30000, '#3987e5', 60000, '#184f95'],

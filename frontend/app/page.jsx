@@ -163,7 +163,7 @@ export default function LoginPage() {
             <Logo size={46} />
             <div>
               <div style={{ fontSize: 22, fontWeight: 700 }}>WeatherPulse AI</div>
-              <div className="small" style={{ color: '#8fa0b0' }}>Team 404 THINKER&apos;S · SIH 2026 · SIH26078</div>
+
             </div>
           </div>
           <h1 style={{ fontSize: 46, lineHeight: 1.06, fontWeight: 600, letterSpacing: '-0.025em' }}>Detect. Track.<br />Alert. Protect.</h1>

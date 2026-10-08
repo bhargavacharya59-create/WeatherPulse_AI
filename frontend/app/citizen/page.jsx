@@ -10,8 +10,42 @@ import { useApi } from '@/lib/useApi';
 
 // Headings in Kannada; detailed guidance stays in English unless Gemini translation is configured.
 const T = {
-  en: { high: 'HIGH RISK NEAR YOU', moderate: 'MODERATE RISK NEAR YOU', low: 'RISK NEARBY', safe: 'No risk forecast at your location', todo: 'What to do now', rain: 'Rain expected at your location', shelter: 'Nearest safe shelter', help: 'Disaster helpline', loc: 'Use my location', you: 'You' },
-  kn: { high: 'ನಿಮ್ಮ ಬಳಿ ಹೆಚ್ಚಿನ ಅಪಾಯ', moderate: 'ನಿಮ್ಮ ಬಳಿ ಮಧ್ಯಮ ಅಪಾಯ', low: 'ಹತ್ತಿರದಲ್ಲಿ ಅಪಾಯ', safe: 'ನಿಮ್ಮ ಸ್ಥಳದಲ್ಲಿ ಅಪಾಯದ ಮುನ್ಸೂಚನೆ ಇಲ್ಲ', todo: 'ಈಗ ಏನು ಮಾಡಬೇಕು', rain: 'ನಿಮ್ಮ ಸ್ಥಳದಲ್ಲಿ ನಿರೀಕ್ಷಿತ ಮಳೆ', shelter: 'ಹತ್ತಿರದ ಸುರಕ್ಷಿತ ಆಶ್ರಯ', help: 'ವಿಪತ್ತು ಸಹಾಯವಾಣಿ', loc: 'ನನ್ನ ಸ್ಥಳ ಬಳಸಿ', you: 'ನೀವು' },
+  en: {
+    portal: 'Citizen alerts', demo: 'Synthetic scenario. Official warnings: IMD / KSNDMC.',
+    high: 'HIGH RISK NEAR YOU', moderate: 'MODERATE RISK NEAR YOU', low: 'RISK NEARBY', safe: 'No risk forecast at your location',
+    todo: 'What to do now', rain: 'Rain expected at your location', shelter: 'Nearest safe shelter', help: 'Disaster helpline',
+    loc: 'Use my location', you: 'You', kmAway: 'km away', dir: 'Directions',
+    noAnomaly: (ward) => `No anomaly zone reaches ${ward || 'your location'} in the next 10 days.`,
+    conf: 'confidence', likely: 'likely', to: 'to',
+    youAre: (dist, ward, risk) => `You are ${dist} km from the forecast centre${ward ? ` (${ward} ward)` : ''}, in the ${risk}-risk ring.`,
+    floodWarn: 'Underpasses and low roads may flood.', yourArea: 'Your area',
+    mmChart: 'mm per 6 hours (ensemble mean). Red = very heavy, orange = heavy.', prec: 'Official warnings from IMD and SDMA always take precedence.',
+    eventTypes: { heavy_rainfall: 'Heavy rainfall', heatwave: 'Heatwave', cyclone: 'Cyclone', flood: 'Flood' }
+  },
+  kn: {
+    portal: 'ನಾಗರಿಕ ಎಚ್ಚರಿಕೆಗಳು', demo: 'ಸಿಂಥೆಟಿಕ್ ಸನ್ನಿವೇಶ. ಅಧಿಕೃತ ಎಚ್ಚರಿಕೆಗಳು: IMD / KSNDMC.',
+    high: 'ನಿಮ್ಮ ಬಳಿ ಹೆಚ್ಚಿನ ಅಪಾಯ', moderate: 'ನಿಮ್ಮ ಬಳಿ ಮಧ್ಯಮ ಅಪಾಯ', low: 'ಹತ್ತಿರದಲ್ಲಿ ಅಪಾಯ', safe: 'ನಿಮ್ಮ ಸ್ಥಳದಲ್ಲಿ ಅಪಾಯದ ಮುನ್ಸೂಚನೆ ಇಲ್ಲ',
+    todo: 'ಈಗ ಏನು ಮಾಡಬೇಕು', rain: 'ನಿಮ್ಮ ಸ್ಥಳದಲ್ಲಿ ನಿರೀಕ್ಷಿತ ಮಳೆ', shelter: 'ಹತ್ತಿರದ ಸುರಕ್ಷಿತ ಆಶ್ರಯ', help: 'ವಿಪತ್ತು ಸಹಾಯವಾಣಿ',
+    loc: 'ನನ್ನ ಸ್ಥಳ ಬಳಸಿ', you: 'ನೀವು', kmAway: 'ಕಿ.ಮೀ ದೂರ', dir: 'ನಿರ್ದೇಶನಗಳು',
+    noAnomaly: (ward) => `ಮುಂದಿನ 10 ದಿನಗಳಲ್ಲಿ ಯಾವುದೇ ಅಪಾಯದ ವಲಯವು ${ward || 'ನಿಮ್ಮ ಸ್ಥಳವನ್ನು'} ತಲುಪುವುದಿಲ್ಲ.`,
+    conf: 'ಖಚಿತತೆ', likely: 'ಸಾಧ್ಯತೆ', to: 'ವರೆಗೆ',
+    youAre: (dist, ward, risk) => `ನೀವು ಮುನ್ಸೂಚನೆ ಕೇಂದ್ರದಿಂದ ${dist} ಕಿ.ಮೀ ದೂರದಲ್ಲಿದ್ದೀರಿ${ward ? ` (${ward} ವಾರ್ಡ್)` : ''}, ${risk} ಅಪಾಯದ ವಲಯದಲ್ಲಿದ್ದೀರಿ.`,
+    floodWarn: 'ಕೆಳಸೇತುವೆಗಳು ಮತ್ತು ತಗ್ಗು ರಸ್ತೆಗಳಲ್ಲಿ ನೀರು ತುಂಬಬಹುದು.', yourArea: 'ನಿಮ್ಮ ಪ್ರದೇಶ',
+    mmChart: '6 ಗಂಟೆಗಳಿಗೆ ಮಿ.ಮೀ (ಸರಾಸರಿ). ಕೆಂಪು = ಅತಿ ಭಾರಿ, ಕಿತ್ತಳೆ = ಭಾರಿ.', prec: 'IMD ಮತ್ತು SDMA ಯ ಅಧಿಕೃತ ಎಚ್ಚರಿಕೆಗಳಿಗೆ ಯಾವಾಗಲೂ ಆದ್ಯತೆ ಇರುತ್ತದೆ.',
+    eventTypes: { heavy_rainfall: 'ಭಾರಿ ಮಳೆ', heatwave: 'ಉಷ್ಣ ಗಾಳಿ', cyclone: 'ಚಂಡಮಾರುತ', flood: 'ಪ್ರವಾಹ' }
+  },
+  hi: {
+    portal: 'नागरिक अलर्ट', demo: 'सिंथेटिक परिदृश्य। आधिकारिक चेतावनियाँ: IMD / KSNDMC.',
+    high: 'आपके पास उच्च जोखिम', moderate: 'आपके पास मध्यम जोखिम', low: 'पास में जोखिम', safe: 'आपके स्थान पर कोई जोखिम का पूर्वानुमान नहीं है',
+    todo: 'अब क्या करें', rain: 'आपके स्थान पर बारिश की संभावना', shelter: 'निकटतम सुरक्षित आश्रय', help: 'आपदा हेल्पलाइन',
+    loc: 'मेरे स्थान का उपयोग करें', you: 'आप', kmAway: 'किमी दूर', dir: 'दिशा-निर्देश',
+    noAnomaly: (ward) => `अगले 10 दिनों में कोई भी जोखिम क्षेत्र ${ward || 'आपके स्थान'} तक नहीं पहुंचेगा।`,
+    conf: 'आत्मविश्वास', likely: 'संभावना', to: 'तक',
+    youAre: (dist, ward, risk) => `आप पूर्वानुमान केंद्र से ${dist} किमी दूर हैं${ward ? ` (${ward} वार्ड)` : ''}, ${risk} जोखिम क्षेत्र में।`,
+    floodWarn: 'अंडरपास और निचली सड़कों पर पानी भर सकता है।', yourArea: 'आपका क्षेत्र',
+    mmChart: 'मिमी प्रति 6 घंटे (औसत)। लाल = बहुत भारी, नारंगी = भारी।', prec: 'IMD और SDMA की आधिकारिक चेतावनियों को हमेशा प्राथमिकता दी जाती है।',
+    eventTypes: { heavy_rainfall: 'भारी बारिश', heatwave: 'लू', cyclone: 'चक्रवात', flood: 'बाढ़' }
+  },
 };
 
 export default function CitizenApp() {
@@ -46,28 +80,33 @@ export default function CitizenApp() {
   return (
     <div className="app-mobile">
       <div className="app-col">
-        <RoleHeader portal="Citizen alerts" right={
-          <button className="btn sm" onClick={() => setLang((l) => (l === 'en' ? 'kn' : 'en'))} aria-label="Switch language" style={{ fontFamily: 'var(--sans), "Noto Sans Kannada"' }}>{lang === 'en' ? 'ಕನ್ನಡ' : 'English'}</button>} />
+        <RoleHeader portal={t.portal} right={
+          <select className="select sm" style={{ fontFamily: 'var(--sans), "Noto Sans Kannada"' }} value={lang} onChange={(e) => setLang(e.target.value)}>
+            <option value="en">English</option>
+            <option value="kn">ಕನ್ನಡ</option>
+            <option value="hi">हिंदी</option>
+          </select>
+        } />
         <div className="m-body" style={{ fontFamily: lang === 'kn' ? 'var(--sans), "Noto Sans Kannada"' : undefined }}>
-          <div className="banner small"><span className="tag">DEMO</span>Synthetic scenario. Official warnings: IMD / KSNDMC.</div>
+          <div className="banner small"><span className="tag">DEMO</span>{t.demo}</div>
           <ErrorBox error={error} onRetry={reload} />
           {!d ? <><Skeleton h={150} /><Skeleton h={220} /></> : !r ? (
             <div className="m-card col gap-8" style={{ background: 'var(--good-tint)', borderColor: '#bfe0cb' }}>
               <div className="row gap-8 strong" style={{ color: 'var(--good)' }}><Icon name="check" />{t.safe}</div>
-              <div className="small">No anomaly zone reaches {d.ward ? d.ward.ward_name : 'your location'} in the next 10 days.</div>
+              <div className="small">{t.noAnomaly(d.ward?.ward_name)}</div>
             </div>
           ) : (
             <>
               <section className="col gap-8" style={{ background: ring === 'low' ? RISK.low.fill : RISK[ring].fill, color: ring === 'low' ? '#14202b' : '#fff', borderRadius: 16, padding: 18 }} role="alert">
-                <div className="row between tiny" style={{ fontWeight: 700, letterSpacing: '0.04em' }}><span>{t[ring]}</span><span style={{ opacity: 0.9, fontWeight: 500 }}>{pct(r.event.probability)} confidence</span></div>
-                <div style={{ fontSize: 22, fontWeight: 600, lineHeight: 1.25 }}>{TYPE_LABEL[r.event.type]} likely {r.event.window.start_local.replace(' IST', '')} to {r.event.window.end_local.replace(' IST', '')}</div>
+                <div className="row between tiny" style={{ fontWeight: 700, letterSpacing: '0.04em' }}><span>{t[ring]}</span><span style={{ opacity: 0.9, fontWeight: 500 }}>{pct(r.event.probability)} {t.conf}</span></div>
+                <div style={{ fontSize: 22, fontWeight: 600, lineHeight: 1.25 }}>{t.eventTypes[r.event.type] || TYPE_LABEL[r.event.type]} {t.likely} {r.event.window.start_local.replace(' IST', '')} {t.to} {r.event.window.end_local.replace(' IST', '')}</div>
                 <div className="small" style={{ lineHeight: 1.5, opacity: 0.95 }}>
-                  You are {r.distance_km} km from the forecast centre{d.ward ? ` (${d.ward.ward_name} ward)` : ''}, in the {RISK[ring].label.toLowerCase()}-risk ring. {r.event.type === 'heavy_rainfall' ? 'Underpasses and low roads may flood.' : ''}
+                  {t.youAre(r.distance_km, d.ward?.ward_name, RISK[ring].label.toLowerCase())} {r.event.type === 'heavy_rainfall' ? t.floodWarn : ''}
                 </div>
               </section>
 
-              <MapView zones={zoneFc} height={260} fit="data" fitKey={`${d.lat}`} interactive={false} title={d.home_label || d.ward?.ward_name || 'Your area'}
-                markers={[{ lon: d.lon, lat: d.lat, label: t.you }, ...(d.shelter ? [{ lon: d.shelter.lon, lat: d.shelter.lat, label: 'Shelter', tone: 'shelter' }] : [])]} />
+              <MapView zones={zoneFc} height={260} fit="data" fitKey={`${d.lat}`} interactive={false} title={d.home_label || d.ward?.ward_name || t.yourArea}
+                markers={[{ lon: d.lon, lat: d.lat, label: t.you }, ...(d.shelter ? [{ lon: d.shelter.lon, lat: d.shelter.lat, label: t.shelter, tone: 'shelter' }] : [])]} />
 
               <section className="m-card col gap-10">
                 <h2 style={{ fontSize: 16 }}>{t.todo}</h2>
@@ -90,7 +129,7 @@ export default function CitizenApp() {
                       </div>
                     ))}
                   </div>
-                  <div className="tiny muted">mm per 6 hours (ensemble mean). Red = very heavy, orange = heavy.</div>
+                  <div className="tiny muted">{t.mmChart}</div>
                 </section>
               )}
 
