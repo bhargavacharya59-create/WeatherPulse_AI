@@ -40,13 +40,34 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="WeatherPulse AI", version=__version__,
-              description="AI-driven spatio-temporal tracking of extreme weather anomalies (SIH26078).", lifespan=lifespan)
-app.add_middleware(CORSMiddleware, allow_origins=settings.cors_origins, allow_credentials=True,
-                   allow_methods=["*"], allow_headers=["*"])
+app = FastAPI(
+    title="WeatherPulse AI",
+    version=__version__,
+    description="AI-driven spatio-temporal tracking of extreme weather anomalies (SIH26078).",
+    lifespan=lifespan
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
 app.include_router(router)
 
 
 @app.get("/")
 def root():
-    return {"name": "WeatherPulse AI", "version": __version__, "docs": "/docs", "api": "/api/v1"}
+    return {
+        "name": "WeatherPulse AI",
+        "version": __version__,
+        "docs": "/docs",
+        "api": "/api/v1"
+    }
+
+
+@app.get("/healthz")
+def healthz():
+    return {"status": "ok"}
