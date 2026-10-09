@@ -39,6 +39,19 @@ const T = {
     typeLabel: (t) => t === 'Extreme rainfall' ? 'ಭಾರಿ ಮಳೆ' : t === 'Cyclonic storm' ? 'ಚಂಡಮಾರುತ' : t === 'Heatwave' ? 'ಶಾಖದ ಅಲೆ' : t === 'Cold wave' ? 'ಶೀತ ಅಲೆ' : t,
     zoneStr: (risk, type) => `${risk} ಅಪಾಯದ ${type} ವಲಯ`,
     aheadStr: (risk, ahead, eta, min) => `${risk} ಅಪಾಯದ ವಲಯ ಮುಂದೆ ${eta} ${min} ಗಳಲ್ಲಿ`,
+    guide: (g) => {
+      const d = {
+        "Take the suggested safer route": "ಸೂಚಿಸಿದ ಸುರಕ್ಷಿತ ಮಾರ್ಗವನ್ನು ತೆಗೆದುಕೊಳ್ಳಿ",
+        "Do not enter waterlogged underpasses": "ನೀರು ತುಂಬಿದ ಕೆಳಸೇತುವೆಗಳನ್ನು ಪ್ರವೇಶಿಸಬೇಡಿ",
+        "If caught in heavy rain, stop at a safe, raised place": "ಭಾರಿ ಮಳೆಯಲ್ಲಿ ಸಿಲುಕಿಕೊಂಡರೆ, ಸುರಕ್ಷಿತ, ಎತ್ತರದ ಸ್ಥಳದಲ್ಲಿ ನಿಲ್ಲಿಸಿ",
+        "Avoid coastal highways": "ಕರಾವಳಿ ಹೆದ್ದಾರಿಗಳನ್ನು ತಪ್ಪಿಸಿ",
+        "Postpone travel through the affected districts": "ಪೀಡಿತ ಜಿಲ್ಲೆಗಳ ಮೂಲಕ ಪ್ರಯಾಣವನ್ನು ಮುಂದೂಡಿ",
+        "Carry water; avoid travel in the afternoon heat": "ನೀರನ್ನು ಕೊಂಡೊಯ್ಯಿರಿ; ಮಧ್ಯಾಹ್ನದ ಬಿಸಿಲಿನಲ್ಲಿ ಪ್ರಯಾಣವನ್ನು ತಪ್ಪಿಸಿ",
+        "Do not leave children or pets in parked vehicles": "ನಿಲ್ಲಿಸಿದ ವಾಹನಗಳಲ್ಲಿ ಮಕ್ಕಳು ಅಥವಾ ಸಾಕುಪ್ರಾಣಿಗಳನ್ನು ಬಿಡಬೇಡಿ",
+        "Expect fog; drive slowly with low-beam lights": "ಮಂಜು ನಿರೀಕ್ಷಿಸಿ; ಕಡಿಮೆ-ಬೀಮ್ ದೀಪಗಳೊಂದಿಗೆ ನಿಧಾನವಾಗಿ ಚಾಲನೆ ಮಾಡಿ"
+      };
+      return d[g] || g;
+    },
     audioInside: (sev, type, self) => `ಎಚ್ಚರಿಕೆ. ನೀವು ${self.riskLabel(sev.toLowerCase())} ಅಪಾಯದ ${self.typeLabel(type)} ವಲಯದಲ್ಲಿದ್ದೀರಿ. ಸುರಕ್ಷಿತ, ಎತ್ತರದ ಸ್ಥಳದಲ್ಲಿ ನಿಲ್ಲಿಸಿ.`,
     audioAhead: (type, eta, extra, self) => `ಎಚ್ಚರಿಕೆ. ಮುಂದಿನ ${eta} ನಿಮಿಷಗಳಲ್ಲಿ ${self.typeLabel(type)} ಅಪಾಯದ ವಲಯವಿದೆ. ಸುರಕ್ಷಿತ ಮಾರ್ಗವು ${extra} ನಿಮಿಷಗಳನ್ನು ಸೇರಿಸುತ್ತದೆ.`
   },
@@ -55,6 +68,19 @@ const T = {
     typeLabel: (t) => t === 'Extreme rainfall' ? 'भारी बारिश' : t === 'Cyclonic storm' ? 'चक्रवाती तूफान' : t === 'Heatwave' ? 'लू' : t === 'Cold wave' ? 'शीतलहर' : t,
     zoneStr: (risk, type) => `${risk} जोखिम ${type} क्षेत्र`,
     aheadStr: (risk, ahead, eta, min) => `${risk} जोखिम क्षेत्र ${eta} ${min} में ${ahead}`,
+    guide: (g) => {
+      const d = {
+        "Take the suggested safer route": "सुझाया गया सुरक्षित मार्ग अपनाएं",
+        "Do not enter waterlogged underpasses": "जलभराव वाले अंडरपास में प्रवेश न करें",
+        "If caught in heavy rain, stop at a safe, raised place": "भारी बारिश में फंसने पर सुरक्षित, ऊंचे स्थान पर रुकें",
+        "Avoid coastal highways": "तटीय राजमार्गों से बचें",
+        "Postpone travel through the affected districts": "प्रभावित जिलों से यात्रा स्थगित करें",
+        "Carry water; avoid travel in the afternoon heat": "पानी साथ रखें; दोपहर की गर्मी में यात्रा से बचें",
+        "Do not leave children or pets in parked vehicles": "खड़ी गाड़ियों में बच्चों या पालतू जानवरों को न छोड़ें",
+        "Expect fog; drive slowly with low-beam lights": "कोहरे की उम्मीद करें; लो-बीम लाइट के साथ धीरे चलाएं"
+      };
+      return d[g] || g;
+    },
     // Audio messages
     audioInside: (sev, type, self) => `चेतावनी। आप एक ${self.riskLabel(sev.toLowerCase())} जोखिम ${self.typeLabel(type)} क्षेत्र के अंदर हैं। एक सुरक्षित, ऊंचे स्थान पर रुकें।`,
     audioAhead: (type, eta, extra, self) => `चेतावनी। लगभग ${eta} मिनट में ${self.typeLabel(type)} जोखिम क्षेत्र आने वाला है। एक सुरक्षित मार्ग में ${extra} मिनट और लगते हैं।`
@@ -161,13 +187,15 @@ export default function TravellerApp() {
               )}
 
               <div className="grid g3" style={{ gap: 8 }}>
-                {[[t.event, TYPE_LABEL[ev.type]], [t.moves, `${ev.motion.direction} ${Math.round(ev.motion.speed_kmh)} ${t.kmh}`], [t.until, ev.window.end_local.split(', ')[1]?.replace(' IST', '') || '']].map(([k, val]) => (
+                {[[t.event, t.typeLabel(TYPE_LABEL[ev.type])], [t.moves, `${ev.motion.direction} ${Math.round(ev.motion.speed_kmh)} ${t.kmh}`], [t.until, ev.window.end_local.split(', ')[1]?.replace(' IST', '') || '']].map(([k, val]) => (
                   <div key={k} style={{ background: '#1e2e3d', borderRadius: 10, padding: 10 }}>
                     <div className="tiny" style={{ color: '#9fb0c0' }}>{k}</div><div className="small strong">{val}</div>
                   </div>
                 ))}
               </div>
-              <ul className="small" style={{ color: '#c9d2da', margin: 0, paddingLeft: 18, lineHeight: 1.7 }}>{d.guidance.map((g) => <li key={g}>{g}</li>)}</ul>
+              <ul className="small" style={{ color: '#c9d2da', margin: 0, paddingLeft: 18, lineHeight: 1.7 }}>
+                {d.guidance.map((g) => <li key={g}>{t.guide ? t.guide(g) : g}</li>)}
+              </ul>
               <p className="tiny" style={{ color: '#9fb0c0' }}>{t.speed} {Math.round(v.speed_kmh)} {t.kmh} · {t.heading} {Math.round(v.heading_deg)}° · {v.operator} · {t.forecastValid} {d.valid_local}</p>
             </div>
           )}

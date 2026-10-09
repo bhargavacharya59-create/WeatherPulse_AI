@@ -32,7 +32,27 @@ const T = {
     youAre: (dist, ward, risk) => `ನೀವು ಮುನ್ಸೂಚನೆ ಕೇಂದ್ರದಿಂದ ${dist} ಕಿ.ಮೀ ದೂರದಲ್ಲಿದ್ದೀರಿ${ward ? ` (${ward} ವಾರ್ಡ್)` : ''}, ${risk} ಅಪಾಯದ ವಲಯದಲ್ಲಿದ್ದೀರಿ.`,
     floodWarn: 'ಕೆಳಸೇತುವೆಗಳು ಮತ್ತು ತಗ್ಗು ರಸ್ತೆಗಳಲ್ಲಿ ನೀರು ತುಂಬಬಹುದು.', yourArea: 'ನಿಮ್ಮ ಪ್ರದೇಶ',
     mmChart: '6 ಗಂಟೆಗಳಿಗೆ ಮಿ.ಮೀ (ಸರಾಸರಿ). ಕೆಂಪು = ಅತಿ ಭಾರಿ, ಕಿತ್ತಳೆ = ಭಾರಿ.', prec: 'IMD ಮತ್ತು SDMA ಯ ಅಧಿಕೃತ ಎಚ್ಚರಿಕೆಗಳಿಗೆ ಯಾವಾಗಲೂ ಆದ್ಯತೆ ಇರುತ್ತದೆ.',
-    eventTypes: { heavy_rainfall: 'ಭಾರಿ ಮಳೆ', heatwave: 'ಉಷ್ಣ ಗಾಳಿ', cyclone: 'ಚಂಡಮಾರುತ', flood: 'ಪ್ರವಾಹ' }
+    eventTypes: { heavy_rainfall: 'ಭಾರಿ ಮಳೆ', heatwave: 'ಉಷ್ಣ ಗಾಳಿ', cyclone: 'ಚಂಡಮಾರುತ', flood: 'ಪ್ರವಾಹ' },
+    guide: (g) => {
+      const d = {
+        "Avoid underpasses, low-lying roads and drains": "ಕೆಳಸೇತುವೆಗಳು, ತಗ್ಗು ಪ್ರದೇಶಗಳು ಮತ್ತು ಚರಂಡಿಗಳನ್ನು ತಪ್ಪಿಸಿ",
+        "Keep phones charged and a torch, water and medicines ready": "ಫೋನ್ ಚಾರ್ಜ್ ಮಾಡಿ ಮತ್ತು ಟಾರ್ಚ್, ನೀರು ಮತ್ತು ಔಷಧಿಗಳನ್ನು ಸಿದ್ಧವಾಗಿಡಿ",
+        "Move valuables and electrical items off the floor": "ಬೆಲೆಬಾಳುವ ವಸ್ತುಗಳು ಮತ್ತು ಎಲೆಕ್ಟ್ರಿಕಲ್ ವಸ್ತುಗಳನ್ನು ನೆಲದಿಂದ ಮೇಲಕ್ಕೆ ಇರಿಸಿ",
+        "Do not walk or drive through flowing water": "ಹರಿಯುವ ನೀರಿನಲ್ಲಿ ನಡೆಯಬೇಡಿ ಅಥವಾ ವಾಹನ ಚಲಾಯಿಸಬೇಡಿ",
+        "Follow evacuation orders from local authorities": "ಸ್ಥಳೀಯ ಅಧಿಕಾರಿಗಳ ಸ್ಥಳಾಂತರ ಆದೇಶಗಳನ್ನು ಅನುಸರಿಸಿ",
+        "Secure loose objects and stay indoors during the storm": "ಬಿಡಿ ವಸ್ತುಗಳನ್ನು ಭದ್ರಪಡಿಸಿ ಮತ್ತು ಬಿರುಗಾಳಿಯ ಸಮಯದಲ್ಲಿ ಮನೆಯೊಳಗೆ ಇರಿ",
+        "Keep a radio, torch, water and dry food ready": "ರೇಡಿಯೋ, ಟಾರ್ಚ್, ನೀರು ಮತ್ತು ಒಣ ಆಹಾರವನ್ನು ಸಿದ್ಧವಾಗಿಡಿ",
+        "Stay away from the coast and fishing activity": "ಕರಾವಳಿಯಿಂದ ಮತ್ತು ಮೀನುಗಾರಿಕೆ ಚಟುವಟಿಕೆಯಿಂದ ದೂರವಿರಿ",
+        "Avoid going out between 12 noon and 4 pm": "ಮಧ್ಯಾಹ್ನ 12 ರಿಂದ ಸಂಜೆ 4 ರವರೆಗೆ ಹೊರಗೆ ಹೋಗುವುದನ್ನು ತಪ್ಪಿಸಿ",
+        "Drink water often, even if not thirsty": "ಬಾಯಾರಿಕೆಯಾಗದಿದ್ದರೂ ಆಗಾಗ್ಗೆ ನೀರು ಕುಡಿಯಿರಿ",
+        "Check on elderly people and children": "ವೃದ್ಧರು ಮತ್ತು ಮಕ್ಕಳ ಬಗ್ಗೆ ಗಮನವಿರಲಿ",
+        "Wear light, loose cotton clothes": "ಹಗುರವಾದ, ಸಡಿಲವಾದ ಹತ್ತಿ ಬಟ್ಟೆಗಳನ್ನು ಧರಿಸಿ",
+        "Wear layered warm clothing": "ಪದರಗಳಿರುವ ಬೆಚ್ಚಗಿನ ಉಡುಪುಗಳನ್ನು ಧರಿಸಿ",
+        "Do not use coal or wood heaters in closed rooms": "ಮುಚ್ಚಿದ ಕೋಣೆಗಳಲ್ಲಿ ಕಲ್ಲಿದ್ದಲು ಅಥವಾ ಮರದ ಹೀಟರ್‌ಗಳನ್ನು ಬಳಸಬೇಡಿ",
+        "Check on elderly and homeless people": "ವೃದ್ಧರು ಮತ್ತು ನಿರಾಶ್ರಿತರ ಬಗ್ಗೆ ಗಮನವಿರಲಿ"
+      };
+      return d[g] || g;
+    }
   },
   hi: {
     portal: 'नागरिक अलर्ट', demo: 'सिंथेटिक परिदृश्य। आधिकारिक चेतावनियाँ: IMD / KSNDMC.',
@@ -44,7 +64,27 @@ const T = {
     youAre: (dist, ward, risk) => `आप पूर्वानुमान केंद्र से ${dist} किमी दूर हैं${ward ? ` (${ward} वार्ड)` : ''}, ${risk} जोखिम क्षेत्र में।`,
     floodWarn: 'अंडरपास और निचली सड़कों पर पानी भर सकता है।', yourArea: 'आपका क्षेत्र',
     mmChart: 'मिमी प्रति 6 घंटे (औसत)। लाल = बहुत भारी, नारंगी = भारी।', prec: 'IMD और SDMA की आधिकारिक चेतावनियों को हमेशा प्राथमिकता दी जाती है।',
-    eventTypes: { heavy_rainfall: 'भारी बारिश', heatwave: 'लू', cyclone: 'चक्रवात', flood: 'बाढ़' }
+    eventTypes: { heavy_rainfall: 'भारी बारिश', heatwave: 'लू', cyclone: 'चक्रवात', flood: 'बाढ़' },
+    guide: (g) => {
+      const d = {
+        "Avoid underpasses, low-lying roads and drains": "अंडरपास, निचली सड़कों और नालों से बचें",
+        "Keep phones charged and a torch, water and medicines ready": "फोन चार्ज रखें और टॉर्च, पानी और दवाएं तैयार रखें",
+        "Move valuables and electrical items off the floor": "कीमती सामान और बिजली के उपकरणों को फर्श से ऊपर रखें",
+        "Do not walk or drive through flowing water": "बहते पानी में न चलें और न ही गाड़ी चलाएं",
+        "Follow evacuation orders from local authorities": "स्थानीय अधिकारियों के निकासी आदेशों का पालन करें",
+        "Secure loose objects and stay indoors during the storm": "तूफान के दौरान ढीली वस्तुओं को सुरक्षित करें और घर के अंदर रहें",
+        "Keep a radio, torch, water and dry food ready": "रेडियो, टॉर्च, पानी और सूखा भोजन तैयार रखें",
+        "Stay away from the coast and fishing activity": "समुद्र तट और मछली पकड़ने की गतिविधि से दूर रहें",
+        "Avoid going out between 12 noon and 4 pm": "दोपहर 12 बजे से शाम 4 बजे के बीच बाहर जाने से बचें",
+        "Drink water often, even if not thirsty": "प्यास न लगने पर भी बार-बार पानी पिएं",
+        "Check on elderly people and children": "बुजुर्गों और बच्चों का ध्यान रखें",
+        "Wear light, loose cotton clothes": "हल्के, ढीले सूती कपड़े पहनें",
+        "Wear layered warm clothing": "परतदार गर्म कपड़े पहनें",
+        "Do not use coal or wood heaters in closed rooms": "बंद कमरों में कोयले या लकड़ी के हीटर का उपयोग न करें",
+        "Check on elderly and homeless people": "बुजुर्गों और बेघर लोगों का ध्यान रखें"
+      };
+      return d[g] || g;
+    }
   },
 };
 
@@ -112,7 +152,7 @@ export default function CitizenApp() {
                 <h2 style={{ fontSize: 16 }}>{t.todo}</h2>
                 {r.guidance.map((g, i) => (
                   <div key={g} className="row-top small" style={{ gap: 10, lineHeight: 1.45 }}>
-                    <span style={{ minWidth: 22, height: 22, borderRadius: 11, background: 'var(--navy)', color: '#fff', fontSize: 12, fontWeight: 700, display: 'grid', placeItems: 'center' }}>{i + 1}</span>{g}
+                    <span style={{ minWidth: 22, height: 22, borderRadius: 11, background: 'var(--navy)', color: '#fff', fontSize: 12, fontWeight: 700, display: 'grid', placeItems: 'center' }}>{i + 1}</span>{t.guide ? t.guide(g) : g}
                   </div>
                 ))}
               </section>
