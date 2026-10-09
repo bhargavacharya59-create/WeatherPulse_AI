@@ -24,7 +24,6 @@ frontend/next-env.d.ts
 # data: regenerable or large (reference/ and small synthetic files ARE committed)
 data/raw/
 data/processed/
-data/models/
 data/*.db
 data/synthetic/forecast_ensemble.npz
 

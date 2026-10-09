@@ -1,0 +1,59 @@
+{
+  "trained_at": "2026-10-08T12:45:34Z",
+  "n_train": 1341,
+  "n_test": 442,
+  "type_accuracy": 0.905,
+  "type_macro_f1": 0.913,
+  "rule_baseline_accuracy": 0.6652,
+  "severity_accuracy": 0.702,
+  "detection_precision": 0.9222,
+  "detection_recall": 0.9294,
+  "false_alarm_rate": 0.107,
+  "split": "event-based hold-out (25% of simulated scenarios)",
+  "type_report": {
+    "noise": {
+      "precision": 0.9027027027027027,
+      "recall": 0.893048128342246,
+      "f1-score": 0.8978494623655914,
+      "support": 187.0
+    },
+    "heavy_rainfall": {
+      "precision": 0.8695652173913043,
+      "recall": 0.8888888888888888,
+      "f1-score": 0.8791208791208791,
+      "support": 90.0
+    },
+    "heatwave": {
+      "precision": 0.9375,
+      "recall": 0.9782608695652174,
+      "f1-score": 0.9574468085106383,
+      "support": 46.0
+    },
+    "cyclone": {
+      "precision": 0.9322033898305084,
+      "recall": 0.9166666666666666,
+      "f1-score": 0.9243697478991597,
+      "support": 60.0
+    },
+    "coldwave": {
+      "precision": 0.9137931034482759,
+      "recall": 0.8983050847457628,
+      "f1-score": 0.905982905982906,
+      "support": 59.0
+    },
+    "accuracy": 0.9049773755656109,
+    "macro avg": {
+      "precision": 0.9111528826745582,
+      "recall": 0.9150339276417563,
+      "f1-score": 0.912953960775835,
+      "support": 442.0
+    },
+    "weighted avg": {
+      "precision": 0.9050617001445737,
+      "recall": 0.9049773755656109,
+      "f1-score": 0.9049241133522061,
+      "support": 442.0
+    }
+  },
+  "backend": "sklearn-hgb"
+}

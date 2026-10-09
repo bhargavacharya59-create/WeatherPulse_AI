@@ -3,7 +3,7 @@
 // lives in localStorage; 401 sends the user back to sign-in, 503 means the
 // backend is still warming up (training models on first start).
 
-export const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000').replace(/\/$/, '');
+export const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8000')).replace(/\/$/, '');
 const TOKEN_KEY = 'wp_token';
 const USER_KEY = 'wp_user';
 
