@@ -18,6 +18,10 @@ const T = {
     slowDown: 'Slow down and stop at a safe, raised place. Do not drive through flowing water.',
     nearZone: 'near', zoneCenter: 'zone centre', saferSkirts: 'The safer route skirts the outer ring and adds about',
     takeSafer: 'Take safer route', keepRoute: 'Keep current route', saferSelected: 'Rerouting via the safer route. Fleet control has been informed.', keepSelected: 'Keeping current route. Drive slowly; alerts will continue.', event: 'Event', moves: 'Zone moves', until: 'Until',
+    riskLabel: (k) => k === 'high' ? 'High' : k === 'moderate' ? 'Moderate' : 'Lower',
+    typeLabel: (t) => t,
+    zoneStr: (risk, type) => `${risk}-risk ${type.toLowerCase()} zone`,
+    aheadStr: (risk, ahead, eta, min) => `${risk}-risk ${ahead} ${eta} ${min}`,
     // Audio messages
     audioInside: (sev, type) => `Warning. You are inside a ${sev} risk ${type} zone. Stop at a safe, raised place.`,
     audioAhead: (type, eta, extra) => `Warning. ${type} risk zone ahead in about ${eta} minutes. A safer route adds ${extra} minutes.`
@@ -31,15 +35,12 @@ const T = {
     slowDown: 'ನಿಧಾನವಾಗಿ ಚಲಿಸಿ ಮತ್ತು ಸುರಕ್ಷಿತ, ಎತ್ತರದ ಸ್ಥಳದಲ್ಲಿ ನಿಲ್ಲಿಸಿ. ಹರಿಯುವ ನೀರಿನಲ್ಲಿ ಚಾಲನೆ ಮಾಡಬೇಡಿ.',
     nearZone: 'ಹತ್ತಿರ', zoneCenter: 'ವಲಯದ ಕೇಂದ್ರ', saferSkirts: 'ಸುರಕ್ಷಿತ ಮಾರ್ಗವು ಹೊರಗಿನ ರಿಂಗ್ ಸುತ್ತಲೂ ಹೋಗುತ್ತದೆ ಮತ್ತು ಹೆಚ್ಚು ಸಮಯ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ',
     takeSafer: 'ಸುರಕ್ಷಿತ ಮಾರ್ಗವನ್ನು ಆರಿಸಿ', keepRoute: 'ಪ್ರಸ್ತುತ ಮಾರ್ಗವನ್ನು ಮುಂದುವರಿಸಿ', saferSelected: 'ಸುರಕ್ಷಿತ ಮಾರ್ಗದ ಮೂಲಕ ಮರುಹೊಂದಿಸಲಾಗುತ್ತಿದೆ. ಫ್ಲೀಟ್ ಕಂಟ್ರೋಲ್‌ಗೆ ಮಾಹಿತಿ ನೀಡಲಾಗಿದೆ.', keepSelected: 'ಪ್ರಸ್ತುತ ಮಾರ್ಗವನ್ನು ಮುಂದುವರಿಸಲಾಗುತ್ತಿದೆ. ನಿಧಾನವಾಗಿ ಚಾಲನೆ ಮಾಡಿ; ಎಚ್ಚರಿಕೆಗಳು ಮುಂದುವರಿಯುತ್ತವೆ.', event: 'ಘಟನೆ', moves: 'ವಲಯ ಚಲಿಸುತ್ತದೆ', until: 'ತನಕ',
-    audioInside: (sev, type) => {
-      const s = sev === 'High' ? 'ಹೆಚ್ಚಿನ' : sev === 'Moderate' ? 'ಮಧ್ಯಮ' : 'ಕಡಿಮೆ';
-      const t = type === 'Extreme rainfall' ? 'ಭಾರಿ ಮಳೆ' : type === 'Cyclonic storm' ? 'ಚಂಡಮಾರುತ' : type === 'Heatwave' ? 'ಶಾಖದ ಅಲೆ' : type === 'Cold wave' ? 'ಶೀತ ಅಲೆ' : type;
-      return `ಎಚ್ಚರಿಕೆ. ನೀವು ${s} ಅಪಾಯದ ${t} ವಲಯದಲ್ಲಿದ್ದೀರಿ. ಸುರಕ್ಷಿತ, ಎತ್ತರದ ಸ್ಥಳದಲ್ಲಿ ನಿಲ್ಲಿಸಿ.`;
-    },
-    audioAhead: (type, eta, extra) => {
-      const t = type === 'Extreme rainfall' ? 'ಭಾರಿ ಮಳೆ' : type === 'Cyclonic storm' ? 'ಚಂಡಮಾರುತ' : type === 'Heatwave' ? 'ಶಾಖದ ಅಲೆ' : type === 'Cold wave' ? 'ಶೀತ ಅಲೆ' : type;
-      return `ಎಚ್ಚರಿಕೆ. ಮುಂದಿನ ${eta} ನಿಮಿಷಗಳಲ್ಲಿ ${t} ಅಪಾಯದ ವಲಯವಿದೆ. ಸುರಕ್ಷಿತ ಮಾರ್ಗವು ${extra} ನಿಮಿಷಗಳನ್ನು ಸೇರಿಸುತ್ತದೆ.`;
-    }
+    riskLabel: (k) => k === 'high' ? 'ಹೆಚ್ಚಿನ' : k === 'moderate' ? 'ಮಧ್ಯಮ' : 'ಕಡಿಮೆ',
+    typeLabel: (t) => t === 'Extreme rainfall' ? 'ಭಾರಿ ಮಳೆ' : t === 'Cyclonic storm' ? 'ಚಂಡಮಾರುತ' : t === 'Heatwave' ? 'ಶಾಖದ ಅಲೆ' : t === 'Cold wave' ? 'ಶೀತ ಅಲೆ' : t,
+    zoneStr: (risk, type) => `${risk} ಅಪಾಯದ ${type} ವಲಯ`,
+    aheadStr: (risk, ahead, eta, min) => `${risk} ಅಪಾಯದ ವಲಯ ಮುಂದೆ ${eta} ${min} ಗಳಲ್ಲಿ`,
+    audioInside: (sev, type, self) => `ಎಚ್ಚರಿಕೆ. ನೀವು ${self.riskLabel(sev.toLowerCase())} ಅಪಾಯದ ${self.typeLabel(type)} ವಲಯದಲ್ಲಿದ್ದೀರಿ. ಸುರಕ್ಷಿತ, ಎತ್ತರದ ಸ್ಥಳದಲ್ಲಿ ನಿಲ್ಲಿಸಿ.`,
+    audioAhead: (type, eta, extra, self) => `ಎಚ್ಚರಿಕೆ. ಮುಂದಿನ ${eta} ನಿಮಿಷಗಳಲ್ಲಿ ${self.typeLabel(type)} ಅಪಾಯದ ವಲಯವಿದೆ. ಸುರಕ್ಷಿತ ಮಾರ್ಗವು ${extra} ನಿಮಿಷಗಳನ್ನು ಸೇರಿಸುತ್ತದೆ.`
   },
   hi: {
     driverMode: 'ड्राइवर मोड', speak: 'बोलें', demo: 'सिम्युलेटेड वाहन और सिंथेटिक पूर्वानुमान।',
@@ -50,16 +51,13 @@ const T = {
     slowDown: 'धीमे हो जाएं और सुरक्षित, ऊंचे स्थान पर रुकें। बहते पानी में गाड़ी न चलाएं।',
     nearZone: 'के पास', zoneCenter: 'क्षेत्र केंद्र', saferSkirts: 'सुरक्षित मार्ग बाहरी रिंग से होकर जाता है और अधिक समय लेता है',
     takeSafer: 'सुरक्षित मार्ग अपनाएं', keepRoute: 'वर्तमान मार्ग पर रहें', saferSelected: 'सुरक्षित मार्ग से जा रहे हैं। फ्लीट कंट्रोल को सूचित कर दिया गया है।', keepSelected: 'वर्तमान मार्ग पर रह रहे हैं। धीरे चलाएं; अलर्ट जारी रहेंगे।', event: 'घटना', moves: 'क्षेत्र चलता है', until: 'तक',
+    riskLabel: (k) => k === 'high' ? 'उच्च' : k === 'moderate' ? 'मध्यम' : 'कम',
+    typeLabel: (t) => t === 'Extreme rainfall' ? 'भारी बारिश' : t === 'Cyclonic storm' ? 'चक्रवाती तूफान' : t === 'Heatwave' ? 'लू' : t === 'Cold wave' ? 'शीतलहर' : t,
+    zoneStr: (risk, type) => `${risk} जोखिम ${type} क्षेत्र`,
+    aheadStr: (risk, ahead, eta, min) => `${risk} जोखिम क्षेत्र ${eta} ${min} में ${ahead}`,
     // Audio messages
-    audioInside: (sev, type) => {
-      const s = sev === 'High' ? 'उच्च' : sev === 'Moderate' ? 'मध्यम' : 'कम';
-      const t = type === 'Extreme rainfall' ? 'भारी बारिश' : type === 'Cyclonic storm' ? 'चक्रवाती तूफान' : type === 'Heatwave' ? 'लू' : type === 'Cold wave' ? 'शीतलहर' : type;
-      return `चेतावनी। आप एक ${s} जोखिम ${t} क्षेत्र के अंदर हैं। एक सुरक्षित, ऊंचे स्थान पर रुकें।`;
-    },
-    audioAhead: (type, eta, extra) => {
-      const t = type === 'Extreme rainfall' ? 'भारी बारिश' : type === 'Cyclonic storm' ? 'चक्रवाती तूफान' : type === 'Heatwave' ? 'लू' : type === 'Cold wave' ? 'शीतलहर' : type;
-      return `चेतावनी। लगभग ${eta} मिनट में ${t} जोखिम क्षेत्र आने वाला है। एक सुरक्षित मार्ग में ${extra} मिनट और लगते हैं।`;
-    }
+    audioInside: (sev, type, self) => `चेतावनी। आप एक ${self.riskLabel(sev.toLowerCase())} जोखिम ${self.typeLabel(type)} क्षेत्र के अंदर हैं। एक सुरक्षित, ऊंचे स्थान पर रुकें।`,
+    audioAhead: (type, eta, extra, self) => `चेतावनी। लगभग ${eta} मिनट में ${self.typeLabel(type)} जोखिम क्षेत्र आने वाला है। एक सुरक्षित मार्ग में ${extra} मिनट और लगते हैं।`
   },
 };
 
@@ -136,10 +134,10 @@ export default function TravellerApp() {
               <section role="alert" className="col gap-6" style={{ background: inside ? RISK.high.fill : RISK.moderate.fill, color: inside ? '#fff' : '#14202b', borderRadius: 16, padding: 18 }}>
                 <div className="tiny" style={{ fontWeight: 700, letterSpacing: '0.05em' }}>{inside ? t.inside : t.heading_in}</div>
                 <div style={{ fontSize: 24, fontWeight: 700, lineHeight: 1.2 }}>
-                  {inside ? `${RISK[v.ring].label}-risk ${TYPE_LABEL[ev.type].toLowerCase()} zone` : `${RISK[v.ring].label}-risk ${t.ahead} ${v.eta_min} ${t.min}`}
+                  {inside ? t.zoneStr(t.riskLabel(v.ring), t.typeLabel(TYPE_LABEL[ev.type])) : t.aheadStr(t.riskLabel(v.ring), t.ahead, v.eta_min, t.min)}
                 </div>
                 <div className="small" style={{ lineHeight: 1.45 }}>
-                  {inside ? t.slowDown : `${TYPE_LABEL[ev.type]} ${t.nearZone} ${ev.place.split(',')[0]}; ${t.zoneCenter} ${v.distance_km} ${t.kmAway}. ${t.saferSkirts} ${d.routes.extra_min} ${t.min}.`}
+                  {inside ? t.slowDown : `${t.typeLabel(TYPE_LABEL[ev.type])} ${t.nearZone} ${ev.place.split(',')[0]}; ${t.zoneCenter} ${v.distance_km} ${t.kmAway}. ${t.saferSkirts} ${d.routes.extra_min} ${t.min}.`}
                 </div>
               </section>
 
