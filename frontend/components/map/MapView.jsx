@@ -263,8 +263,21 @@ export default function MapView({
         map.on('mouseenter', l, () => { map.getCanvas().style.cursor = 'pointer'; });
         map.on('mouseleave', l, () => { map.getCanvas().style.cursor = ''; });
       });
+      
+      const ro = new ResizeObserver(() => {
+        if (mapRef.current) mapRef.current.resize();
+      });
+      ro.observe(ref.current);
+      
+      return () => { 
+        cancelled = true; 
+        clearTimeout(fallbackTimer); 
+        ro.disconnect();
+        markerRefs.current.forEach((m) => m.remove()); 
+        map?.remove(); 
+        mapRef.current = null; 
+      };
     });
-    return () => { cancelled = true; clearTimeout(fallbackTimer); markerRefs.current.forEach((m) => m.remove()); map?.remove(); mapRef.current = null; };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const switchBase = (b) => {
