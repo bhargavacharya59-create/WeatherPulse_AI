@@ -99,8 +99,8 @@ export default function TravellerApp() {
   const speak = () => {
     if (!d?.vehicle || d.clear || typeof window === 'undefined') return;
     const msg = v.status === 'inside'
-      ? t.audioInside(ev.severity, TYPE_LABEL[ev.type])
-      : t.audioAhead(TYPE_LABEL[ev.type], v.eta_min, d.routes.extra_min);
+      ? t.audioInside(ev.severity, TYPE_LABEL[ev.type], t)
+      : t.audioAhead(TYPE_LABEL[ev.type], v.eta_min, d.routes.extra_min, t);
     
     // Use Cloud TTS to guarantee regional voices work on ANY laptop for the demo
     const audio = new Audio(`https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(msg)}&tl=${lang}&client=tw-ob`);
