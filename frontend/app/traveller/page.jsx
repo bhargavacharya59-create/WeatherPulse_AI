@@ -31,9 +31,15 @@ const T = {
     slowDown: 'ನಿಧಾನವಾಗಿ ಚಲಿಸಿ ಮತ್ತು ಸುರಕ್ಷಿತ, ಎತ್ತರದ ಸ್ಥಳದಲ್ಲಿ ನಿಲ್ಲಿಸಿ. ಹರಿಯುವ ನೀರಿನಲ್ಲಿ ಚಾಲನೆ ಮಾಡಬೇಡಿ.',
     nearZone: 'ಹತ್ತಿರ', zoneCenter: 'ವಲಯದ ಕೇಂದ್ರ', saferSkirts: 'ಸುರಕ್ಷಿತ ಮಾರ್ಗವು ಹೊರಗಿನ ರಿಂಗ್ ಸುತ್ತಲೂ ಹೋಗುತ್ತದೆ ಮತ್ತು ಹೆಚ್ಚು ಸಮಯ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ',
     takeSafer: 'ಸುರಕ್ಷಿತ ಮಾರ್ಗವನ್ನು ಆರಿಸಿ', keepRoute: 'ಪ್ರಸ್ತುತ ಮಾರ್ಗವನ್ನು ಮುಂದುವರಿಸಿ', saferSelected: 'ಸುರಕ್ಷಿತ ಮಾರ್ಗದ ಮೂಲಕ ಮರುಹೊಂದಿಸಲಾಗುತ್ತಿದೆ. ಫ್ಲೀಟ್ ಕಂಟ್ರೋಲ್‌ಗೆ ಮಾಹಿತಿ ನೀಡಲಾಗಿದೆ.', keepSelected: 'ಪ್ರಸ್ತುತ ಮಾರ್ಗವನ್ನು ಮುಂದುವರಿಸಲಾಗುತ್ತಿದೆ. ನಿಧಾನವಾಗಿ ಚಾಲನೆ ಮಾಡಿ; ಎಚ್ಚರಿಕೆಗಳು ಮುಂದುವರಿಯುತ್ತವೆ.', event: 'ಘಟನೆ', moves: 'ವಲಯ ಚಲಿಸುತ್ತದೆ', until: 'ತನಕ',
-    // Audio messages
-    audioInside: (sev, type) => `ಎಚ್ಚರಿಕೆ. ನೀವು ${sev} ಅಪಾಯದ ${type} ವಲಯದಲ್ಲಿದ್ದೀರಿ. ಸುರಕ್ಷಿತ, ಎತ್ತರದ ಸ್ಥಳದಲ್ಲಿ ನಿಲ್ಲಿಸಿ.`,
-    audioAhead: (type, eta, extra) => `ಎಚ್ಚರಿಕೆ. ಮುಂದಿನ ${eta} ನಿಮಿಷಗಳಲ್ಲಿ ${type} ಅಪಾಯದ ವಲಯವಿದೆ. ಸುರಕ್ಷಿತ ಮಾರ್ಗವು ${extra} ನಿಮಿಷಗಳನ್ನು ಸೇರಿಸುತ್ತದೆ.`
+    audioInside: (sev, type) => {
+      const s = sev === 'High' ? 'ಹೆಚ್ಚಿನ' : sev === 'Moderate' ? 'ಮಧ್ಯಮ' : 'ಕಡಿಮೆ';
+      const t = type === 'Extreme rainfall' ? 'ಭಾರಿ ಮಳೆ' : type === 'Cyclonic storm' ? 'ಚಂಡಮಾರುತ' : type === 'Heatwave' ? 'ಶಾಖದ ಅಲೆ' : type === 'Cold wave' ? 'ಶೀತ ಅಲೆ' : type;
+      return `ಎಚ್ಚರಿಕೆ. ನೀವು ${s} ಅಪಾಯದ ${t} ವಲಯದಲ್ಲಿದ್ದೀರಿ. ಸುರಕ್ಷಿತ, ಎತ್ತರದ ಸ್ಥಳದಲ್ಲಿ ನಿಲ್ಲಿಸಿ.`;
+    },
+    audioAhead: (type, eta, extra) => {
+      const t = type === 'Extreme rainfall' ? 'ಭಾರಿ ಮಳೆ' : type === 'Cyclonic storm' ? 'ಚಂಡಮಾರುತ' : type === 'Heatwave' ? 'ಶಾಖದ ಅಲೆ' : type === 'Cold wave' ? 'ಶೀತ ಅಲೆ' : type;
+      return `ಎಚ್ಚರಿಕೆ. ಮುಂದಿನ ${eta} ನಿಮಿಷಗಳಲ್ಲಿ ${t} ಅಪಾಯದ ವಲಯವಿದೆ. ಸುರಕ್ಷಿತ ಮಾರ್ಗವು ${extra} ನಿಮಿಷಗಳನ್ನು ಸೇರಿಸುತ್ತದೆ.`;
+    }
   },
   hi: {
     driverMode: 'ड्राइवर मोड', speak: 'बोलें', demo: 'सिम्युलेटेड वाहन और सिंथेटिक पूर्वानुमान।',
@@ -45,8 +51,15 @@ const T = {
     nearZone: 'के पास', zoneCenter: 'क्षेत्र केंद्र', saferSkirts: 'सुरक्षित मार्ग बाहरी रिंग से होकर जाता है और अधिक समय लेता है',
     takeSafer: 'सुरक्षित मार्ग अपनाएं', keepRoute: 'वर्तमान मार्ग पर रहें', saferSelected: 'सुरक्षित मार्ग से जा रहे हैं। फ्लीट कंट्रोल को सूचित कर दिया गया है।', keepSelected: 'वर्तमान मार्ग पर रह रहे हैं। धीरे चलाएं; अलर्ट जारी रहेंगे।', event: 'घटना', moves: 'क्षेत्र चलता है', until: 'तक',
     // Audio messages
-    audioInside: (sev, type) => `चेतावनी। आप एक ${sev} जोखिम ${type} क्षेत्र के अंदर हैं। एक सुरक्षित, ऊंचे स्थान पर रुकें।`,
-    audioAhead: (type, eta, extra) => `चेतावनी। लगभग ${eta} मिनट में ${type} जोखिम क्षेत्र आने वाला है। एक सुरक्षित मार्ग में ${extra} मिनट और लगते हैं।`
+    audioInside: (sev, type) => {
+      const s = sev === 'High' ? 'उच्च' : sev === 'Moderate' ? 'मध्यम' : 'कम';
+      const t = type === 'Extreme rainfall' ? 'भारी बारिश' : type === 'Cyclonic storm' ? 'चक्रवाती तूफान' : type === 'Heatwave' ? 'लू' : type === 'Cold wave' ? 'शीतलहर' : type;
+      return `चेतावनी। आप एक ${s} जोखिम ${t} क्षेत्र के अंदर हैं। एक सुरक्षित, ऊंचे स्थान पर रुकें।`;
+    },
+    audioAhead: (type, eta, extra) => {
+      const t = type === 'Extreme rainfall' ? 'भारी बारिश' : type === 'Cyclonic storm' ? 'चक्रवाती तूफान' : type === 'Heatwave' ? 'लू' : type === 'Cold wave' ? 'शीतलहर' : type;
+      return `चेतावनी। लगभग ${eta} मिनट में ${t} जोखिम क्षेत्र आने वाला है। एक सुरक्षित मार्ग में ${extra} मिनट और लगते हैं।`;
+    }
   },
 };
 
@@ -69,6 +82,12 @@ export default function TravellerApp() {
     if (lang === 'hi') utterance.lang = 'hi-IN';
     else if (lang === 'kn') utterance.lang = 'kn-IN';
     else utterance.lang = 'en-IN';
+    
+    // Explicitly try to match the chosen language voice (e.g. kn-IN) if installed
+    const voices = window.speechSynthesis.getVoices();
+    const voice = voices.find(vo => vo.lang === utterance.lang || vo.lang.startsWith(lang));
+    if (voice) utterance.voice = voice;
+    
     window.speechSynthesis.speak(utterance);
   };
   useEffect(() => { if (d?.vehicle && !d.clear) { const t = setTimeout(speak, 800); return () => clearTimeout(t); } return undefined; }, [d?.vehicle?.id]); // eslint-disable-line react-hooks/exhaustive-deps
