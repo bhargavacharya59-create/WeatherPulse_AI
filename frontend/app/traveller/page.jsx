@@ -73,22 +73,24 @@ export default function TravellerApp() {
   const ev = d?.event;
 
   const speak = () => {
-    if (!d?.vehicle || d.clear || typeof window === 'undefined' || !window.speechSynthesis) return;
+    if (!d?.vehicle || d.clear || typeof window === 'undefined') return;
     const msg = v.status === 'inside'
       ? t.audioInside(ev.severity, TYPE_LABEL[ev.type])
       : t.audioAhead(TYPE_LABEL[ev.type], v.eta_min, d.routes.extra_min);
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(msg);
-    if (lang === 'hi') utterance.lang = 'hi-IN';
-    else if (lang === 'kn') utterance.lang = 'kn-IN';
-    else utterance.lang = 'en-IN';
     
-    // Explicitly try to match the chosen language voice (e.g. kn-IN) if installed
-    const voices = window.speechSynthesis.getVoices();
-    const voice = voices.find(vo => vo.lang === utterance.lang || vo.lang.startsWith(lang));
-    if (voice) utterance.voice = voice;
-    
-    window.speechSynthesis.speak(utterance);
+    // Use Cloud TTS to guarantee regional voices work on ANY laptop for the demo
+    const audio = new Audio(`https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(msg)}&tl=${lang}&client=tw-ob`);
+    audio.play().catch((e) => {
+      // Fallback to local synthesis if audio is blocked
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(msg);
+      utterance.lang = lang === 'hi' ? 'hi-IN' : lang === 'kn' ? 'kn-IN' : 'en-IN';
+      const voices = window.speechSynthesis.getVoices();
+      const voice = voices.find(vo => vo.lang === utterance.lang || vo.lang.startsWith(lang));
+      if (voice) utterance.voice = voice;
+      window.speechSynthesis.speak(utterance);
+    });
   };
   useEffect(() => { if (d?.vehicle && !d.clear) { const t = setTimeout(speak, 800); return () => clearTimeout(t); } return undefined; }, [d?.vehicle?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
